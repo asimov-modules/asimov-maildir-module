@@ -1,0 +1,17 @@
+# See: https://asimov-specs.github.io/module-manifest/
+---
+name: maildir
+label: Maildir
+title: ASIMOV Maildir Module
+summary: Maildir email import.
+links:
+  - https://github.com/asimov-modules/asimov-maildir-module
+  - https://crates.io/crates/asimov-maildir-module
+
+provides:
+  programs:
+    - asimov-maildir-cataloger
+
+handles:
+  file_extensions:
+  content_types:
