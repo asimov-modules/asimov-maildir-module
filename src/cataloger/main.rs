@@ -3,6 +3,7 @@
 #[cfg(not(feature = "std"))]
 compile_error!("asimov-maildir-cataloger requires the 'std' feature");
 
+use asimov_maildir_module::MaildirReader;
 use asimov_module::SysexitsError::{self, *};
 use clap::Parser;
 use clientele::StandardOptions;
@@ -14,6 +15,9 @@ use std::error::Error;
 struct Options {
     #[clap(flatten)]
     flags: StandardOptions,
+
+    /// The path to the maildir to catalog
+    maildir: String,
 }
 
 fn main() -> Result<SysexitsError, Box<dyn Error>> {
@@ -42,7 +46,14 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
     #[cfg(feature = "tracing")]
     asimov_module::init_tracing_subscriber(&options.flags).expect("failed to initialize logging");
 
-    println!("asimov-maildir-cataloger output"); // TODO
+    // Open the maildir directory:
+    let maildir = MaildirReader::open(options.maildir)?;
 
-    Ok(EX_UNAVAILABLE)
+    // Scan the maildir messages:
+    for entry in maildir.iter() {
+        let email = entry?;
+        println!("{:?}", email); // TODO
+    }
+
+    Ok(EX_OK)
 }

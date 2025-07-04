@@ -13,7 +13,7 @@ homepage = "https://github.com/asimov-modules"
 repository = "https://github.com/asimov-modules/asimov-maildir-module"
 license = "Unlicense"
 keywords = ["asimov-module", "asimov", "ai"]
-categories = ["command-line-utilities", "text-processing"]           # TODO
+categories = ["command-line-utilities", "text-processing"]             # TODO
 publish = true
 
 [features]
@@ -33,6 +33,7 @@ clientele = { version = "0.3.8", default-features = false, features = [
     "clap",
     "std",
 ], optional = true }
+maildir = "0.6"
 
 [profile.release]
 opt-level = "z"
