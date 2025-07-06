@@ -8,7 +8,7 @@ pub struct MaildirIterator(MailEntries);
 
 impl MaildirIterator {
     pub fn new(inner: MailEntries) -> Self {
-        MaildirIterator(inner)
+        Self(inner)
     }
 }
 

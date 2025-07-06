@@ -10,6 +10,6 @@ pub struct MaildirMessage {
 impl From<&MailEntry> for MaildirMessage {
     fn from(entry: &MailEntry) -> Self {
         let id = entry.id().to_string();
-        MaildirMessage { id }
+        Self { id }
     }
 }

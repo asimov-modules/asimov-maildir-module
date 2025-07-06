@@ -7,6 +7,7 @@ use asimov_maildir_module::MaildirReader;
 use asimov_module::SysexitsError::{self, *};
 use clap::Parser;
 use clientele::StandardOptions;
+use dogma::{Uri, UriScheme::File, UriValueParser};
 use std::error::Error;
 
 /// asimov-maildir-cataloger
@@ -17,7 +18,8 @@ struct Options {
     flags: StandardOptions,
 
     /// The path to the maildir to catalog
-    maildir: String,
+    #[arg(value_parser = UriValueParser::new(&[File]))]
+    maildir: Uri<'static>,
 }
 
 fn main() -> Result<SysexitsError, Box<dyn Error>> {
@@ -47,7 +49,7 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
     asimov_module::init_tracing_subscriber(&options.flags).expect("failed to initialize logging");
 
     // Open the maildir directory:
-    let maildir = MaildirReader::open(options.maildir)?;
+    let maildir = MaildirReader::open(options.maildir.path())?;
 
     // Scan the maildir messages:
     for entry in maildir.iter() {
