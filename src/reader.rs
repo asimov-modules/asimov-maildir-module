@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 
 use super::{MaildirIterator, MaildirMessage};
-use maildir::Maildir;
+use maildir::{MailEntryError, Maildir};
 use std::{io, path::Path};
 
 pub struct MaildirReader {
@@ -15,7 +15,7 @@ impl MaildirReader {
         })
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = io::Result<MaildirMessage>> {
+    pub fn iter(&self) -> impl Iterator<Item = Result<MaildirMessage, MailEntryError>> {
         MaildirIterator::new(self.maildir.list_new())
             .chain(MaildirIterator::new(self.maildir.list_cur()))
     }

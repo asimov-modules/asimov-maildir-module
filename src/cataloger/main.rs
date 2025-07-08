@@ -52,9 +52,12 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
     let maildir = MaildirReader::open(options.maildir.path())?;
 
     // Scan the maildir messages:
-    for entry in maildir.iter() {
+    for (index, entry) in maildir.iter().enumerate() {
         let email = entry?;
-        println!("{:?}", email); // TODO
+        if index > 0 {
+            println!();
+        }
+        print!("{}", email.message);
     }
 
     Ok(EX_OK)

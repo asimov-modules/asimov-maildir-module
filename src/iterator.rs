@@ -1,8 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 
 use super::MaildirMessage;
-use maildir::MailEntries;
-use std::io::Result;
+use maildir::{MailEntries, MailEntryError};
 
 pub struct MaildirIterator(MailEntries);
 
@@ -13,11 +12,13 @@ impl MaildirIterator {
 }
 
 impl Iterator for MaildirIterator {
-    type Item = Result<MaildirMessage>;
+    type Item = Result<MaildirMessage, MailEntryError>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.0
-            .next()
-            .map(|entry| entry.map(|entry| (&entry).into()))
+        match self.0.next() {
+            None => None,
+            Some(Err(err)) => Some(Err(MailEntryError::IOError(err))),
+            Some(Ok(entry)) => Some(entry.try_into()),
+        }
     }
 }
