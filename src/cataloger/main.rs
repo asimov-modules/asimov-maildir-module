@@ -17,7 +17,11 @@ struct Options {
     #[clap(flatten)]
     flags: StandardOptions,
 
-    /// The path to the maildir to catalog
+    /// The maximum number of messages to catalog.
+    #[arg(short = 'n', long)]
+    limit: Option<usize>,
+
+    /// The `file:` URL to the maildir folder to catalog.
     #[arg(value_parser = UriValueParser::new(&[File]))]
     maildir: Uri<'static>,
 }
@@ -52,7 +56,11 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
     let maildir = MaildirReader::open(options.maildir.path())?;
 
     // Scan the maildir messages:
-    for (index, entry) in maildir.iter().enumerate() {
+    for (index, entry) in maildir
+        .iter()
+        .take(options.limit.unwrap_or(usize::MAX))
+        .enumerate()
+    {
         let email = entry?;
         if index > 0 {
             println!();
