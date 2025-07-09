@@ -34,7 +34,7 @@ clientele = { version = "0.3.8", default-features = false, features = [
     "std",
 ], optional = true }
 dogma = { version = "0.1.11", default-features = false, features = ["all"] }
-know = { version = "0.1.1", features = ["maildir", "mailparse"] }
+know = { version = "0.1.2", features = ["maildir", "mailparse"] }
 maildir = "0.6"
 
 [profile.release]
@@ -45,4 +45,9 @@ lto = "thin"
 [[bin]]
 name = "asimov-maildir-cataloger"
 path = "src/cataloger/main.rs"
+required-features = ["cli"]
+
+[[bin]]
+name = "asimov-maildir-fetcher"
+path = "src/fetcher/main.rs"
 required-features = ["cli"]

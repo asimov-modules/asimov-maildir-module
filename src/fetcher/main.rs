@@ -1,33 +1,30 @@
 // This is free and unencumbered software released into the public domain.
 
 #[cfg(not(feature = "std"))]
-compile_error!("asimov-maildir-cataloger requires the 'std' feature");
+compile_error!("asimov-maildir-fetcher requires the 'std' feature");
 
 use asimov_maildir_module::MaildirReader;
 use asimov_module::SysexitsError::{self, *};
 use clap::Parser;
 use clientele::StandardOptions;
 use dogma::{Uri, UriScheme::File, UriValueParser};
+use know::datatypes::EmailMessageId;
 use std::error::Error;
 
-/// asimov-maildir-cataloger
+/// asimov-maildir-fetcher
 #[derive(Debug, Parser)]
 #[command(arg_required_else_help = true)]
 struct Options {
     #[clap(flatten)]
     flags: StandardOptions,
 
-    /// The maximum number of messages to catalog.
-    #[arg(short = 'n', long)]
-    limit: Option<usize>,
-
     /// The output format.
     #[arg(short = 'o', long)]
     output: Option<String>,
 
-    /// A `file:/path/to/maildir/` URL to the folder to catalog.
-    #[arg(id = "MAILDIR-FOLDER-URL", value_parser = UriValueParser::new(&[File]))]
-    maildir_url: Uri<'static>,
+    /// A `file:/path/to/maildir/#mid` URL to the message to fetch.
+    #[arg(id = "MAILDIR-MESSAGE-URL", value_parser = UriValueParser::new(&[File]))]
+    message_url: Uri<'static>,
 }
 
 fn main() -> Result<SysexitsError, Box<dyn Error>> {
@@ -57,20 +54,22 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
     asimov_module::init_tracing_subscriber(&options.flags).expect("failed to initialize logging");
 
     // Open the maildir directory:
-    let maildir = MaildirReader::open(options.maildir_url.path())?;
+    let maildir = MaildirReader::open(options.message_url.path())?;
 
-    // Scan the maildir messages:
-    for (index, entry) in maildir
-        .iter()
-        .take(options.limit.unwrap_or(usize::MAX))
-        .enumerate()
-    {
-        let email = entry?;
-        if index > 0 {
-            println!();
-        }
-        print!("{}", email.message);
+    // Fetch the maildir message:
+    let message_id: EmailMessageId = options
+        .message_url
+        .fragment_str()
+        .expect("message ID should be given in the URL fragment")
+        .into();
+    match maildir.fetch(&message_id)? {
+        Some(message) => {
+            print!("{}", message.message);
+            Ok(EX_OK)
+        },
+        None => {
+            eprintln!("message ID <{}> not found", message_id.as_str());
+            Ok(EX_NOINPUT)
+        },
     }
-
-    Ok(EX_OK)
 }
