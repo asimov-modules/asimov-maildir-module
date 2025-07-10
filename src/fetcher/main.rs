@@ -19,8 +19,8 @@ struct Options {
     flags: StandardOptions,
 
     /// The output format.
-    #[arg(short = 'o', long)]
-    output: Option<String>,
+    #[arg(id = "FORMAT", short = 'o', long)]
+    output_format: Option<String>,
 
     /// A `file:/path/to/maildir/#mid` URL to the message to fetch.
     #[arg(id = "MAILDIR-MESSAGE-URL", value_parser = UriValueParser::new(&[File]))]
@@ -64,7 +64,11 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
         .into();
     match maildir.fetch(&message_id)? {
         Some(message) => {
-            print!("{}", message.message);
+            print!("{}", message.headers.mime());
+            if let Some(body) = message.body {
+                println!();
+                print!("{}", body);
+            }
             Ok(EX_OK)
         },
         None => {
