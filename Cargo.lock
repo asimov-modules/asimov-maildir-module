@@ -46,6 +46,7 @@ dependencies = [
  "asimov-module",
  "clap",
  "clientele",
+ "colored_json",
  "dogma",
  "know",
  "mail-parser",
@@ -653,9 +654,9 @@ dependencies = [
 
 [[package]]
 name = "know"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b311a78496b6bbfb903e6991f671281c5ca9851214a8f8e2749d21dc17e43a3"
+checksum = "d98cd116382f5cdb21f7b06754739011ff60173fe8f1565ba80ae5e3285d5da0"
 dependencies = [
  "cfg_eval",
  "chrono",
