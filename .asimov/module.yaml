@@ -11,7 +11,11 @@ links:
 provides:
   programs:
     - asimov-maildir-cataloger
+    - asimov-maildir-fetcher
 
 handles:
+  url_protocols:
+    - file
   file_extensions:
+    - .maildir
   content_types:
