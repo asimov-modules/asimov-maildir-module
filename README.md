@@ -13,9 +13,15 @@
 
 ## 🛠️ Prerequisites
 
-- [Rust](https://rust-lang.org) 1.85+ (2024 edition)
+- [Rust] 1.85+ (2024 edition) if building from source code
 
 ## ⬇️ Installation
+
+### Installation with the [ASIMOV CLI]
+
+```bash
+asimov module install maildir -v
+```
 
 ### Installation from Source Code
 
@@ -26,7 +32,56 @@ cargo install asimov-maildir-module
 ## 👉 Examples
 
 ```bash
+asimov-maildir-cataloger file:/path/to/maildir/
+```
+
+```bash
+asimov-maildir-fetcher file:/path/to/maildir/#mid
+```
+
+## ⚙ Configuration
+
+This module requires no configuration.
+
+## 📚 Reference
+
+### `asimov-maildir-cataloger`
+
+```
 asimov-maildir-cataloger
+
+Usage: asimov-maildir-cataloger [OPTIONS] <MAILDIR-FOLDER-URL>
+
+Arguments:
+  <MAILDIR-FOLDER-URL>  A `file:/path/to/maildir/` URL to the folder to catalog
+
+Options:
+  -d, --debug            Enable debugging output
+      --license          Show license information
+  -v, --verbose...       Enable verbose output (may be repeated for more verbosity)
+  -V, --version          Print version information
+  -n, --limit <COUNT>    The maximum number of messages to catalog
+  -o, --output <FORMAT>  The output format
+  -h, --help             Print help
+```
+
+### `asimov-maildir-fetcher`
+
+```
+asimov-maildir-fetcher
+
+Usage: asimov-maildir-fetcher [OPTIONS] <MAILDIR-MESSAGE-URL>
+
+Arguments:
+  <MAILDIR-MESSAGE-URL>  A `file:/path/to/maildir/#mid` URL to the message to fetch
+
+Options:
+  -d, --debug            Enable debugging output
+      --license          Show license information
+  -v, --verbose...       Enable verbose output (may be repeated for more verbosity)
+  -V, --version          Print version information
+  -o, --output <FORMAT>  The output format
+  -h, --help             Print help
 ```
 
 ## 👨‍💻 Development
@@ -44,7 +99,9 @@ git clone https://github.com/asimov-modules/asimov-maildir-module.git
 [![Share on LinkedIn](https://img.shields.io/badge/share%20on-linkedin-3949AB?logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/asimov-modules/asimov-maildir-module)
 
 [ASIMOV]: https://asimov.sh
+[ASIMOV CLI]: https://cli.asimov.sh
 [JSON-LD]: https://json-ld.org
 [KNOW]: https://know.dev
 [Maildir]: https://en.wikipedia.org/wiki/Maildir
 [RDF]: https://www.w3.org/TR/rdf12-primer/
+[Rust]: https://rust-lang.org
