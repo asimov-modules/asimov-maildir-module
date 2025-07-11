@@ -30,7 +30,7 @@ tracing = ["asimov-module/tracing", "clientele?/tracing"]
 [dependencies]
 asimov-module = { version = "25.0.0-dev.13", default-features = false }
 dogma = { version = "0.1.11", default-features = false, features = ["all"] }
-know = { version = "0.2.1", features = ["mail-parser", "serde"] }
+know = { version = "0.2.2", features = ["mail-parser", "serde"] }
 mail-parser = "0.11"
 maildir = "0.6"
 
