@@ -69,6 +69,7 @@ dependencies = [
  "know",
  "mail-parser",
  "maildir",
+ "serde_json",
 ]
 
 [[package]]

@@ -8,7 +8,7 @@ use asimov_module::SysexitsError::{self, *};
 use clap::Parser;
 use clientele::StandardOptions;
 use dogma::{Uri, UriScheme::File, UriValueParser};
-use std::error::Error;
+use std::{error::Error, io::stdout};
 
 /// asimov-maildir-cataloger
 #[derive(Debug, Parser)]
@@ -17,11 +17,11 @@ struct Options {
     #[clap(flatten)]
     flags: StandardOptions,
 
-    /// The maximum number of messages to catalog.
+    /// Limit the number of messages to catalog.
     #[arg(value_name = "COUNT", short = 'n', long)]
     limit: Option<usize>,
 
-    /// The output format.
+    /// Set the output format [default: cli] [possible values: cli, json, jsonld, jsonl]
     #[arg(value_name = "FORMAT", short = 'o', long)]
     output: Option<String>,
 
@@ -60,13 +60,23 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
     let maildir = MaildirReader::open(options.maildir_url.path())?;
 
     // Scan the maildir messages:
-    let messages = maildir.iter().take(options.limit.unwrap_or(usize::MAX));
+    let messages = maildir.iter();
+    let messages = messages.take(options.limit.unwrap_or(usize::MAX));
     match options
         .output
         .as_ref()
         .unwrap_or(&String::default())
         .as_str()
     {
+        "jsonl" => {
+            use know::traits::ToJsonLd;
+            for message in messages {
+                let message = message?;
+                let json = message.headers.to_jsonld()?;
+                serde_json::to_writer(stdout(), &json)?;
+                println!();
+            }
+        },
         "jsonld" | "json" => {
             use know::traits::ToJsonLd;
             let mut output = Vec::new();
@@ -75,19 +85,23 @@ fn main() -> Result<SysexitsError, Box<dyn Error>> {
                 output.push(message.headers.to_jsonld()?);
             }
             if cfg!(feature = "pretty") {
-                colored_json::write_colored_json(&output, &mut std::io::stdout())?;
-                println!();
+                colored_json::write_colored_json(&output, &mut stdout())?;
             } else {
-                todo!() // TODO
+                serde_json::to_writer_pretty(stdout(), &output)?;
             }
+            println!();
         },
-        _ => {
+        "cli" | _ => {
             for (index, message) in messages.enumerate() {
                 let message = message?;
-                if index > 0 {
+                if index > 0 && options.flags.verbose > 0 {
                     println!();
                 }
-                print!("{}", message.headers.detailed());
+                match options.flags.verbose {
+                    0 => print!("{}", message.headers.oneliner()),
+                    1 => print!("{}", message.headers.concise()),
+                    _ => print!("{}", message.headers.detailed()),
+                }
             }
         },
     }

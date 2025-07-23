@@ -33,6 +33,7 @@ dogma = { version = "0.1.11", default-features = false, features = ["all"] }
 know = { version = "0.2.6", features = ["mail-parser", "serde"] }
 mail-parser = "0.11"
 maildir = "0.6"
+serde_json = { version = "1", default-features = false, features = ["alloc"] }
 
 # Optional integrations:
 clap = { version = "4.5", default-features = false, features = [
