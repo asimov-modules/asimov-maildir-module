@@ -9,7 +9,9 @@
 
 ## ✨ Features
 
-- To be determined!
+- Parses email messages from Maildir folders and outputs them as [JSON-LD].
+- Constructs a semantic knowledge graph based on the [KNOW] ontology.
+- Distributed as a standalone static binary with zero runtime dependencies.
 
 ## 🛠️ Prerequisites
 
@@ -37,6 +39,12 @@ cargo install asimov-maildir-module
 
 ```bash
 asimov-maildir-cataloger file:/path/to/maildir/
+```
+
+#### Exporting email messages in the maildir as JSON
+
+```bash
+asimov-maildir-cataloger file:/path/to/maildir/ -o json
 ```
 
 #### Fetching a specific email message
