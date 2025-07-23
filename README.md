@@ -31,9 +31,15 @@ cargo install asimov-maildir-module
 
 ## 👉 Examples
 
+### Email Import from an Maildir Folder
+
+#### Cataloging email messages in the maildir
+
 ```bash
 asimov-maildir-cataloger file:/path/to/maildir/
 ```
+
+#### Fetching a specific email message
 
 ```bash
 asimov-maildir-fetcher file:/path/to/maildir/#mid
