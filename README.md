@@ -25,6 +25,8 @@
 asimov module install maildir -v
 ```
 
+<img width="100%" alt="Installation with the ASIMOV CLI" src="https://github.com/asimov-modules/asimov-maildir-module/raw/master/etc/install.svg"/>
+
 ### Installation from Source Code
 
 ```bash
